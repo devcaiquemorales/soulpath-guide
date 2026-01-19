@@ -1,4 +1,5 @@
-import type { Game, GameData } from "../types";
+import type { Game, GameData } from "@/domain/entities";
+import { darkSoulsData } from "./dark-souls";
 import { demonsSoulsData } from "./demons-souls";
 
 // All supported games
@@ -43,6 +44,7 @@ export const GAMES: Game[] = [
 // Game data registry - maps slug to full game data
 const GAME_DATA_REGISTRY: Record<string, GameData> = {
   "demons-souls": demonsSoulsData,
+  "dark-souls": darkSoulsData,
 };
 
 export function getGameBySlug(slug: string): Game | undefined {

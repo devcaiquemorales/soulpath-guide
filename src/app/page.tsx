@@ -1,23 +1,9 @@
 "use client";
 
-import { GameCard } from "@/components/game-card";
-import { GAMES, getGameData } from "@/data/games";
-import { useAllGamesProgress } from "@/hooks/use-progress";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+import { AnimatedThemeToggler } from "@/presentation/components/ui/animated-theme-toggler";
+import { GameGrid } from "@/presentation/features/game";
 
 export default function HomePage() {
-  const { isLoaded, getGameProgress } = useAllGamesProgress();
-
-  // Calculate total tasks for each game
-  const getGameTotalTasks = (slug: string): number => {
-    const gameData = getGameData(slug);
-    if (!gameData) return 0;
-    return gameData.checklist.reduce(
-      (total, step) => total + step.tasks.length,
-      0
-    );
-  };
-
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
@@ -39,23 +25,7 @@ export default function HomePage() {
 
       {/* Game grid */}
       <div className="max-w-4xl mx-auto px-4 lg:px-8 py-6">
-        <div className="grid gap-3 sm:grid-cols-2 lg:gap-4">
-          {GAMES.map((game) => {
-            const progress = isLoaded
-              ? getGameProgress(game.slug)
-              : { completedTasks: 0, completedTrophies: 0 };
-            const totalTasks = getGameTotalTasks(game.slug);
-
-            return (
-              <GameCard
-                key={game.id}
-                game={game}
-                completedTasks={progress.completedTasks}
-                totalTasks={totalTasks}
-              />
-            );
-          })}
-        </div>
+        <GameGrid />
 
         {/* Footer note */}
         <p className="text-xs text-muted-foreground text-center mt-8 sm:mt-12">

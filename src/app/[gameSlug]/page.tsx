@@ -1,42 +1,41 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import { notFound } from "next/navigation";
-import { PageHeader } from "@/components/page-header";
-import { ChecklistStep } from "@/components/checklist-step";
-import { Progress } from "@/components/ui/progress";
-import { getGameData } from "@/data/games";
-import { useProgress } from "@/hooks/use-progress";
+import { PageHeader } from "@/presentation/components/common/page-header";
+import { ProgressBar } from "@/presentation/components/common/progress-bar";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/presentation/components/ui/tabs";
+import { ChecklistTab } from "@/presentation/features/checklist";
+import { TrophyTab } from "@/presentation/features/trophy";
+import { useTaskProgress, useTrophyProgress } from "@/application/hooks";
+import { getGameData, calculateTotalTasks } from "@/application/services";
+import { getGameImage } from "@/lib/constants/game-images";
 
 type PageProps = {
   params: Promise<{ gameSlug: string }>;
 };
 
+type TabType = "checklist" | "trophies";
+
 export default function GameChecklistPage({ params }: PageProps) {
   const { gameSlug } = use(params);
   const gameData = getGameData(gameSlug);
+  const [activeTab, setActiveTab] = useState<TabType>("checklist");
 
   if (!gameData) {
     notFound();
   }
 
-  const { isLoaded, isTaskComplete, toggleTask, getChecklistProgress } =
-    useProgress(gameSlug);
+  const { getChecklistProgress } = useTaskProgress(gameSlug);
+  const { getTrophyProgress } = useTrophyProgress(gameSlug);
 
-  const totalTasks = gameData.checklist.reduce(
-    (total, step) => total + step.tasks.length,
-    0
-  );
-  const progress = getChecklistProgress(totalTasks);
-  const progressPercentage =
-    totalTasks > 0
-      ? Math.round((progress.completed / progress.total) * 100)
-      : 0;
+  const totalTasks = calculateTotalTasks(gameData.checklist);
+  const checklistProgress = getChecklistProgress(totalTasks);
+  const trophyProgress = getTrophyProgress(gameData.trophies.length);
 
-  // Find the first step with incomplete tasks to auto-expand
-  const firstIncompleteStepIndex = gameData.checklist.findIndex((step) =>
-    step.tasks.some((task) => !isTaskComplete(task.id))
-  );
+  // Determine which progress to show based on active tab
+  const currentProgress =
+    activeTab === "checklist" ? checklistProgress : trophyProgress;
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,56 +43,51 @@ export default function GameChecklistPage({ params }: PageProps) {
         title={gameData.game.shortName}
         backHref="/"
         backLabel="Games"
-        showTrophiesLink
-        trophiesHref={`/${gameSlug}/trophies`}
+        gameImage={getGameImage(gameSlug)}
       />
 
-      {/* Progress bar */}
-      <div className="sticky top-[57px] z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 lg:px-8 py-2">
-          <div className="flex items-center gap-3">
-            <Progress value={progressPercentage} className="h-1.5 flex-1" />
-            <span className="text-xs text-muted-foreground tabular-nums shrink-0">
-              {progress.completed}/{progress.total}
-            </span>
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as TabType)}
+      >
+        {/* Tabs */}
+        <div className="sticky top-[57px] z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 border-b border-border">
+          <div className="max-w-4xl mx-auto px-4 lg:px-8 py-3">
+            <TabsList className="w-full justify-center p-0.5 gap-0">
+              <TabsTrigger value="checklist" className="flex-1 h-full">
+                Checklist
+              </TabsTrigger>
+              <TabsTrigger value="trophies" className="flex-1 h-full">
+                Trophies
+              </TabsTrigger>
+            </TabsList>
           </div>
         </div>
-      </div>
 
-      {/* Checklist */}
-      <main className="max-w-4xl mx-auto px-4 lg:px-8 py-4">
-        {!isLoaded ? (
-          <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-12 bg-muted/50 rounded-lg animate-pulse"
-              />
-            ))}
+        {/* Progress bar */}
+        <div className="sticky top-[105px] z-10 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 border-b border-border">
+          <div className="max-w-4xl mx-auto px-4 lg:px-8 py-2">
+            <ProgressBar progress={currentProgress} />
           </div>
-        ) : (
-          <div className="space-y-1">
-            {gameData.checklist.map((step, index) => (
-              <ChecklistStep
-                key={step.id}
-                step={step}
-                isTaskComplete={isTaskComplete}
-                onToggleTask={toggleTask}
-                defaultOpen={index === firstIncompleteStepIndex}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="mt-8 pt-4 border-t border-border">
-          <p className="text-xs text-muted-foreground text-center">
-            {progress.completed === progress.total && progress.total > 0
-              ? "Checklist complete! Check your trophies."
-              : "Progress saves automatically"}
-          </p>
         </div>
-      </main>
+
+        {/* Content */}
+        <main className="max-w-4xl mx-auto px-4 lg:px-8 py-4">
+          <TabsContent value="checklist" className="mt-0 w-full md:w-4xl max-w-4xl">
+            <ChecklistTab
+              gameSlug={gameSlug}
+              checklist={gameData.checklist}
+            />
+          </TabsContent>
+
+          <TabsContent value="trophies" className="mt-0 w-full md:w-4xl max-w-4xl">
+            <TrophyTab
+              gameSlug={gameSlug}
+              trophies={gameData.trophies}
+            />
+          </TabsContent>
+        </main>
+      </Tabs>
     </div>
   );
 }
