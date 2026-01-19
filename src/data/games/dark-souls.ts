@@ -229,14 +229,6 @@ export const darkSoulsData: GameData = {
           wikiUrl: "https://darksouls.wiki.fextralife.com/Crescent+Axe",
         },
         {
-          id: "kh-demons-catalyst",
-          name: "Demon's Catalyst",
-          category: "Enemy Drops",
-          description: "Drops from Demon Firesage in Demon Ruins.",
-          image: "/dark-souls/knights-honor/demon_s_catalyst.png",
-          wikiUrl: "https://darksouls.wiki.fextralife.com/Demon's+Catalyst",
-        },
-        {
           id: "kh-giants-halberd",
           name: "Giant's Halberd",
           category: "Enemy Drops",
@@ -251,14 +243,6 @@ export const darkSoulsData: GameData = {
           description: "Acquired by killing NPC invader Paladin Leeroy. He will invade you in The Tomb of Giants just before Nito's domain, down near the area that overlooks the distant Ash Lake.",
           image: "/dark-souls/knights-honor/grant.png",
           wikiUrl: "https://darksouls.wiki.fextralife.com/Grant",
-        },
-        {
-          id: "kh-izalith-catalyst",
-          name: "Izalith Catalyst",
-          category: "Enemy Drops",
-          description: "Drop from the Daughter of Chaos enemy in Lost Izalith, in front of the Bed of Chaos boss door.",
-          image: "/dark-souls/knights-honor/izalith_catalyst.png",
-          wikiUrl: "https://darksouls.wiki.fextralife.com/Izalith+Catalyst",
         },
         {
           id: "kh-sanctus",
@@ -442,14 +426,6 @@ export const darkSoulsData: GameData = {
           image: "/dark-souls/knights-honor/priscilla_s_dagger.png",
           wikiUrl: "https://darksouls.wiki.fextralife.com/Priscilla%27s+Dagger",
         },
-        {
-          id: "kh-gargoyle-tail-axe",
-          name: "Gargoyle Tail Axe",
-          category: "Tail Cuts",
-          description: "Undead Parish. During the boss fight, cut off the tail of the first Bell Gargoyle. Easier if focused down before 2nd Gargoyle comes into the fight. It can also be obtained from the two gargoyles near the beginning of Anor Londo.",
-          image: "/dark-souls/knights-honor/gargoyle_tail_axe.png",
-          wikiUrl: "https://darksouls.wiki.fextralife.com/Gargoyle+Tail+Axe",
-        },
       ],
     },
     {
@@ -517,10 +493,12 @@ export const darkSoulsData: GameData = {
           image: "/dark-souls/wisdom-of-a-sage/hush.png",
           wikiUrl: "https://darksouls.wiki.fextralife.com/Hush",
         },
+       
+        // Big Hat Logan
         {
           id: "ws-magic-weapon-griggs",
           name: "Magic Weapon",
-          category: "Griggs of Vinheim",
+          category: "Big Hat Logan",
           description: "Purchase from Griggs of Vinheim or Big Hat Logan.",
           image: "/dark-souls/wisdom-of-a-sage/magic_weapon.png",
           wikiUrl: "https://darksouls.wiki.fextralife.com/Magic+Weapon",
@@ -528,13 +506,11 @@ export const darkSoulsData: GameData = {
         {
           id: "ws-magic-shield",
           name: "Magic Shield",
-          category: "Griggs of Vinheim",
+          category: "Big Hat Logan",
           description: "Purchase from Griggs of Vinheim or Big Hat Logan.",
           image: "/dark-souls/wisdom-of-a-sage/magic_shield.png",
           wikiUrl: "https://darksouls.wiki.fextralife.com/Magic+Shield",
         },
-
-        // Big Hat Logan
         {
           id: "ws-homing-soulmass",
           name: "Homing Soulmass",
